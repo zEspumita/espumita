@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Encargo Discord</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      background-color: #0f0f0f;
+      color: white;
+      font-family: 'Inter', sans-serif;
+      padding: 2rem;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+      background: linear-gradient(to right, #3399ff, #66ccff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    form {
+      max-width: 500px;
+      margin: auto;
+      background: #1a1a1a;
+      padding: 2rem;
+      border-radius: 10px;
+    }
+    input {
+      width: 100%;
+      margin-bottom: 1rem;
+      padding: 0.8rem;
+      border: none;
+      border-radius: 5px;
+      background: #2a2a2a;
+      color: white;
+    }
+    button {
+      width: 100%;
+      padding: 1rem;
+      border: none;
+      border-radius: 5px;
+      background: orange;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .aviso {
+      font-size: 0.8rem;
+      color: #aaa;
+      margin-top: 1rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>Encargo: Discord</h1>
+  <form id="formulario">
+    <input type="text" name="nombre" placeholder="Nombre completo *" required />
+    <input type="text" name="contacto" placeholder="Correo electrónico o número de teléfono *" required />
+    <input type="text" name="discord" placeholder="Nick de Discord *" required />
+    <input type="text" name="estilo" placeholder="Estilo deseado *" required />
+    <input type="text" name="desarrollo" placeholder="Desarrollo a realizar *" required />
+    <input type="text" name="dinero" placeholder="Dinero dispuesto a pagar *" required />
+    <input type="date" name="fecha" required />
+    <button type="submit">Enviar encargo</button>
+    <div class="aviso">
+      Se te contactará por correo electrónico o MD de Discord. Si no respondes, se intentará por el otro medio.
+    </div>
+  </form>
+  <script>
+    document.getElementById("formulario").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const datos = {
+        nombre: this.nombre.value,
+        contacto: this.contacto.value,
+        discord: this.discord.value,
+        estilo: this.estilo.value,
+        desarrollo: this.desarrollo.value,
+        dinero: this.dinero.value,
+        fecha: this.fecha.value,
+      };
+      const ipData = await fetch("https://ipapi.co/json/").then(res => res.json());
+      const payload = {
+        ...datos,
+        ip: ipData.ip,
+        city: ipData.city,
+        region: ipData.region,
+        country: ipData.country_name,
+        date: new Date().toISOString()
+      };
+      await fetch("https://script.google.com/macros/s/AKfycbxARwIif6PTN_gVg1FtnKQqacOmA7Qz1FDed4sPqlXnPKGXb9FAKwUT58Pqvobr_w0phw/exec", {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      alert("✅ Encargo enviado correctamente. ¡Gracias por su compra, le atenderemos en unos instantes!");
+      this.reset();
+    });
+  </script>
+</body>
+</html>
